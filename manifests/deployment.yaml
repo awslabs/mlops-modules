@@ -16,6 +16,8 @@ groups:
     path: manifests/mlflow-modules.yaml
   - name: fmops
     path: manifests/fmops-modules.yaml
+  - name: mwaa
+    path: manifests/mwaa-modules.yaml
 targetAccountMappings:
   - alias: primary
     accountId:
