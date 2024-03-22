@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.8
+    commands:
+      - pip install --upgrade --force-reinstall . "awscli>1.20.30"
+
+  build:
+    commands:
+      - export PYTHONUNBUFFERED=TRUE
+      - |
+        create-pipeline \
+          --role-arn $SAGEMAKER_PIPELINE_ROLE_ARN \
+          --model-package-group-name $MODEL_PACKAGE_GROUP_NAME \
+          --region $AWS_REGION \
+          --artifact-bucket $ARTIFACT_BUCKET \
+          --base-job-prefix $BASE_JOB_PREFIX \
+          --pipeline-name $SAGEMAKER_PROJECT_NAME \
+          --tags "[{\"Key\":\"sagemaker:project-name\", \"Value\":\"${SAGEMAKER_PROJECT_NAME}\"}, {\"Key\":\"sagemaker:project-id\", \"Value\":\"${SAGEMAKER_PROJECT_ID}\"}]"
+      - echo "Create/Update of the SageMaker Pipeline complete."
