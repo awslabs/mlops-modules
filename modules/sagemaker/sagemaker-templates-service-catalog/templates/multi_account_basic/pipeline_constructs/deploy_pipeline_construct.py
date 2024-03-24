@@ -1,8 +1,7 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-from typing import Any
-
+from typing import Any, List
 import aws_cdk
 from aws_cdk import Aws, CfnCapabilities
 from aws_cdk import aws_codebuild as codebuild
@@ -24,7 +23,6 @@ class DeployPipelineConstruct(Construct):
         construct_id: str,
         project_name: str,
         project_id: str,
-        s3_artifact: s3.IBucket,
         pipeline_artifact_bucket: s3.IBucket,
         model_package_group_name: str,
         repo_asset: s3_assets.Asset,
@@ -33,6 +31,12 @@ class DeployPipelineConstruct(Construct):
         prod_account: str,
         prod_region: str,
         deployment_region: str,
+        preprod_vpc_id: str = None,
+        preprod_private_subnet_ids: List[str]= None,
+        preprod_public_subnet_ids: List[str] = None,
+        prod_vpc_id: str = None,
+        prod_private_subnet_ids: List[str ] = None,
+        prod_public_subnet_ids: List[str ] = None,
         **kwargs: Any,
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
@@ -118,7 +122,6 @@ class DeployPipelineConstruct(Construct):
                 build_image=codebuild.LinuxBuildImage.STANDARD_5_0,
                 environment_variables={
                     "MODEL_PACKAGE_GROUP_NAME": codebuild.BuildEnvironmentVariable(value=model_package_group_name),
-                    "MODEL_BUCKET_ARN": codebuild.BuildEnvironmentVariable(value=s3_artifact.bucket_arn),
                     "PROJECT_ID": codebuild.BuildEnvironmentVariable(value=project_id),
                     "PROJECT_NAME": codebuild.BuildEnvironmentVariable(value=project_name),
                     "DEPLOYMENT_ACCOUNT": codebuild.BuildEnvironmentVariable(value=Aws.ACCOUNT_ID),
@@ -127,6 +130,12 @@ class DeployPipelineConstruct(Construct):
                     "PREPROD_REGION": codebuild.BuildEnvironmentVariable(value=preprod_region),
                     "PROD_ACCOUNT": codebuild.BuildEnvironmentVariable(value=prod_account),
                     "PROD_REGION": codebuild.BuildEnvironmentVariable(value=prod_region),
+                    "PRE_PROD_VPC_ID": codebuild.BuildEnvironmentVariable(value=preprod_vpc_id),
+                    "PRE_PROD_PRIVATE_SUBNET_IDS": codebuild.BuildEnvironmentVariable(value=preprod_private_subnet_ids),
+                    "PRE_PROD_PUBLIC_SUBNET_IDS": codebuild.BuildEnvironmentVariable(value=preprod_public_subnet_ids),
+                    "PROD_VPC_ID": codebuild.BuildEnvironmentVariable(value=prod_vpc_id),
+                    "PROD_PRIVATE_SUBNET_IDS": codebuild.BuildEnvironmentVariable(value=prod_private_subnet_ids),
+                    "PROD_PUBLIC_SUBNET_IDS": codebuild.BuildEnvironmentVariable(value=prod_public_subnet_ids),
                 },
             ),
         )
@@ -187,6 +196,12 @@ class DeployPipelineConstruct(Construct):
                     "PREPROD_REGION": codebuild.BuildEnvironmentVariable(value=preprod_region),
                     "PROD_ACCOUNT": codebuild.BuildEnvironmentVariable(value=prod_account),
                     "PROD_REGION": codebuild.BuildEnvironmentVariable(value=prod_region),
+                    "PRE_PROD_VPC_ID": codebuild.BuildEnvironmentVariable(value=preprod_vpc_id),
+                    "PRE_PROD_PRIVATE_SUBNET_IDS": codebuild.BuildEnvironmentVariable(value=preprod_private_subnet_ids),
+                    "PRE_PROD_PUBLIC_SUBNET_IDS": codebuild.BuildEnvironmentVariable(value=preprod_public_subnet_ids),
+                    "PROD_VPC_ID": codebuild.BuildEnvironmentVariable(value=prod_vpc_id),
+                    "PROD_PRIVATE_SUBNET_IDS": codebuild.BuildEnvironmentVariable(value=prod_private_subnet_ids),
+                    "PROD_PUBLIC_SUBNET_IDS": codebuild.BuildEnvironmentVariable(value=prod_public_subnet_ids),
                 },
             ),
         )
