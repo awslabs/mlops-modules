@@ -39,6 +39,7 @@ class MlflowImagePublishingStack(cdk.Stack):
             "ECRDeployment",
             src=ecr_deployment.DockerImageName(local_image.image_uri),
             dest=ecr_deployment.DockerImageName(self.image_uri),
+            build_image="public.ecr.aws/lambda/provided:al2023",
         )
 
         # Add CDK nag suppressions
