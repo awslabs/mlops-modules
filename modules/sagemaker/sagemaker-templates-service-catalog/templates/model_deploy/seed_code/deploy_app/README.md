@@ -1,10 +1,7 @@
-# NEEDED: Explanation on VPC and Network pre-requirements
-Check https://gitlab.aws.dev/aws-proserve-emea-etip/cdk-pipelines/-/blob/main/README.md
-
 
 # Welcome to your CDK Python project!
 
-This is a blank project for Python development with CDK.
+This is a blank project for CDK development with Python.
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
