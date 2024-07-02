@@ -1,7 +1,7 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-from typing import Any
+from typing import Any, List
 
 import aws_cdk.aws_iam as iam
 import aws_cdk.aws_kms as kms
@@ -28,6 +28,9 @@ class Product(servicecatalog.ProductStack):
         build_app_asset: s3_assets.Asset,
         pre_prod_account_id: str,
         prod_account_id: str,
+        vpc_id: str,
+        subnet_ids: List[str],
+        security_group_ids: List[str],
         **kwargs: Any,
     ) -> None:
         super().__init__(scope, id)

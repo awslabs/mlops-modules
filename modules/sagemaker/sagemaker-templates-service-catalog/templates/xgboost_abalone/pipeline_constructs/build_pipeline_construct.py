@@ -1,7 +1,7 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-from typing import Any
+from typing import Any, List
 
 import aws_cdk
 from aws_cdk import Aws
@@ -27,6 +27,9 @@ class BuildPipelineConstruct(Construct):
         model_bucket: s3.IBucket,
         pipeline_artifact_bucket: s3.IBucket,
         repo_asset: s3_assets.Asset,
+        vpc_id: str,
+        subnet_ids: List[str],
+        security_group_ids: List[str],
         **kwargs: Any,
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
@@ -226,6 +229,9 @@ class BuildPipelineConstruct(Construct):
             environment=codebuild.BuildEnvironment(
                 build_image=codebuild.LinuxBuildImage.STANDARD_5_0,
                 environment_variables={
+                    "VPC_ID": codebuild.BuildEnvironmentVariable(value=vpc_id),
+                    "SUBNET_IDS": codebuild.BuildEnvironmentVariable(value=subnet_ids),
+                    "SECURITY_GROUP_IDS": codebuild.BuildEnvironmentVariable(value=security_group_ids),
                     "SAGEMAKER_PROJECT_NAME": codebuild.BuildEnvironmentVariable(value=project_name),
                     "SAGEMAKER_PROJECT_ID": codebuild.BuildEnvironmentVariable(value=project_id),
                     "MODEL_PACKAGE_GROUP_NAME": codebuild.BuildEnvironmentVariable(value=model_package_group_name),
