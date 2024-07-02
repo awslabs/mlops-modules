@@ -1,0 +1,269 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ModelEndpointStack to match snapshot 1`] = `
+{
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "SsmParameterValuetestprojectvpcsgidC96584B6F00A464EAD1953AFF4B05118Parameter": {
+      "Default": "/test-project/vpc/sg/id",
+      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>",
+    },
+    "SsmParameterValuetestprojectvpcsubnetsprivateidsC96584B6F00A464EAD1953AFF4B05118Parameter": {
+      "Default": "/test-project/vpc/subnets/private/ids",
+      "Type": "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
+    },
+  },
+  "Resources": {
+    "Endpoint": {
+      "DependsOn": [
+        "EndpointConfig",
+      ],
+      "Properties": {
+        "EndpointConfigName": "test-project-ec-123456789",
+        "EndpointName": "test-project-e",
+      },
+      "Type": "AWS::SageMaker::Endpoint",
+    },
+    "EndpointConfig": {
+      "DependsOn": [
+        "Model",
+      ],
+      "Properties": {
+        "EndpointConfigName": "test-project-ec-123456789",
+        "KmsKeyId": {
+          "Ref": "EndpointKmsKey6747A8D9",
+        },
+        "ProductionVariants": [
+          {
+            "InitialInstanceCount": 1,
+            "InitialVariantWeight": 1,
+            "InstanceType": "ml.m5.xlarge",
+            "VariantName": "AllTraffic",
+          },
+        ],
+      },
+      "Type": "AWS::SageMaker::EndpointConfig",
+    },
+    "EndpointKmsKey6747A8D9": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "Description": "Key used for encryption of data in Amazon SageMaker Endpoint",
+        "EnableKeyRotation": true,
+        "KeyPolicy": {
+          "Statement": [
+            {
+              "Action": "kms:*",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":root",
+                    ],
+                  ],
+                },
+              },
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::KMS::Key",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "Model": {
+      "Properties": {
+        "Containers": [
+          {
+            "ModelPackageName": "model-package-arn",
+          },
+        ],
+        "ExecutionRoleArn": {
+          "Fn::GetAtt": [
+            "ModelExecutionRole3247A550",
+            "Arn",
+          ],
+        },
+        "ModelName": "model-package-group-123456789",
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            {
+              "Ref": "SsmParameterValuetestprojectvpcsgidC96584B6F00A464EAD1953AFF4B05118Parameter",
+            },
+          ],
+          "Subnets": {
+            "Ref": "SsmParameterValuetestprojectvpcsubnetsprivateidsC96584B6F00A464EAD1953AFF4B05118Parameter",
+          },
+        },
+      },
+      "Type": "AWS::SageMaker::Model",
+    },
+    "ModelExecutionPolicy67130DDE": {
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "kms:Encrypt",
+                "kms:Decrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+                "kms:CreateGrant",
+                "kms:ListGrants",
+                "kms:DescribeKey",
+              ],
+              "Condition": {
+                "ForAnyValue:StringEquals": {
+                  "kms:ResourceAliases": "alias/sagemaker-artifacts-bucket",
+                },
+                "StringEquals": {
+                  "kms:ViaService": "s3.us-east-1.amazonaws.com",
+                },
+              },
+              "Effect": "Allow",
+              "Resource": "arn:aws:kms:us-east-1:123456789012:key/*",
+              "Sid": "ModelArtifactsBucketKeyAccess",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "ModelExecutionRole3247A550": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "sagemaker.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Ref": "ModelExecutionPolicy67130DDE",
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/AmazonSageMakerFullAccess",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "ModelExecutionRoleDefaultPolicyFA1BB405": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject",
+                "s3:PutObjectLegalHold",
+                "s3:PutObjectRetention",
+                "s3:PutObjectTagging",
+                "s3:PutObjectVersionTagging",
+                "s3:Abort*",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":s3:::sagemaker-artifacts-bucket",
+                    ],
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":s3:::sagemaker-artifacts-bucket/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "ModelExecutionRoleDefaultPolicyFA1BB405",
+        "Roles": [
+          {
+            "Ref": "ModelExecutionRole3247A550",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;

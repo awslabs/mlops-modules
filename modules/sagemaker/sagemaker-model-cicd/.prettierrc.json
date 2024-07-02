@@ -1,0 +1,5 @@
+{
+  "singleQuote": true,
+  "overrides": [],
+  "plugins": ["prettier-plugin-organize-imports"]
+}

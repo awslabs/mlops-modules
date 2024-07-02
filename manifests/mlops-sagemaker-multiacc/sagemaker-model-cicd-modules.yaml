@@ -1,0 +1,21 @@
+name: model # replace with name of the ML model you prefer
+path: modules/sagemaker/sagemaker-model-cicd
+targetAccount: tooling
+parameters:
+  - name: infra-repo
+    value:
+      host: codecommit
+      name: mlops-infra-repo
+  - name: model-build-repo
+    value:
+      host: codecommit
+      name: mlops-build-repo
+  - name: deployment-groups
+    value:
+      - name: experimentation
+        sourceBranch: dev
+        buildEnvironment:
+          name: dev
+          account: "REPLACE_WITH_DEV_ACCOUNT"
+          region: us-east-1
+          type: dev

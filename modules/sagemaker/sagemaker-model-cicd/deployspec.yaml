@@ -1,0 +1,18 @@
+publishGenericEnvVariables: true
+deploy:
+  phases:
+    install:
+      commands:
+        - npm install
+    build:
+      commands:
+        - npx cdk deploy --all --require-approval never --progress events
+destroy:
+  phases:
+    install:
+      commands:
+        - npm install
+    build:
+      commands:
+        - npx cdk destroy --all --force
+build_type: BUILD_GENERAL1_LARGE

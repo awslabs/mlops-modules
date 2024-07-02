@@ -12,7 +12,16 @@ groups:
     path: manifests/mlops-sagemaker-multiacc/sagemaker-templates-modules.yaml
   - name: sagemaker-kernels
     path: manifests/mlops-sagemaker-multiacc/kernels-modules.yaml
+  - name: model-cicd
+    path: manifests/mlops-sagemaker-multiacc/sagemaker-model-cicd-modules.yaml
 targetAccountMappings:
+  - alias: tooling
+    accountId:
+      valueFrom:
+        envVariable: PRIMARY_ACCOUNT
+    regionMappings:
+      - region: us-east-1
+        default: true
   - alias: dev
     accountId:
       valueFrom:
